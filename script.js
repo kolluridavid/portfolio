@@ -16,16 +16,19 @@
   onScroll();
 
   // Mobile menu
+  const closeMenu = () => {
+    menuBtn.classList.remove("open");
+    nav.classList.remove("open");
+    document.body.classList.remove("menu-open");
+  };
   menuBtn.addEventListener("click", () => {
-    menuBtn.classList.toggle("open");
-    nav.classList.toggle("open");
+    const isOpen = nav.classList.toggle("open");
+    menuBtn.classList.toggle("open", isOpen);
+    document.body.classList.toggle("menu-open", isOpen);
   });
-  navLinks.forEach((a) =>
-    a.addEventListener("click", () => {
-      menuBtn.classList.remove("open");
-      nav.classList.remove("open");
-    })
-  );
+  navLinks.forEach((a) => a.addEventListener("click", closeMenu));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+  window.addEventListener("resize", () => { if (window.innerWidth > 760) closeMenu(); });
 
   // Fade-in on scroll
   const revealEls = document.querySelectorAll(".reveal");
