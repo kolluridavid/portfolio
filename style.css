@@ -411,36 +411,17 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 @media (max-width: 760px) {
   body { font-size: 1.08rem; }
   .menu-btn { display: block; z-index: 60; }
-
-  /* backdrop-filter on the header traps fixed children inside it, which broke the
-     full-screen menu on phones, so use a plain solid background here instead */
-  .header.scrolled {
-    background: var(--black);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-
   .nav {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
+    inset: 0;
     background: var(--black);
     flex-direction: column;
     align-items: center; justify-content: center;
     gap: 2rem;
     transform: translateY(-100%);
-    visibility: hidden;
-    transition: transform 0.6s var(--ease), visibility 0s linear 0.6s;
-    z-index: 55;
+    transition: transform 0.6s var(--ease);
   }
-  .nav.open {
-    transform: none;
-    visibility: visible;
-    transition: transform 0.6s var(--ease), visibility 0s;
-  }
-  .logo { position: relative; z-index: 60; }
+  .nav.open { transform: none; }
   .nav a { font-family: var(--font-head); font-size: 2rem; letter-spacing: 0.05em; text-transform: none; color: var(--white); }
   .section { padding: 5.5rem 0; }
   .project { grid-template-columns: 1fr; gap: 0.6rem; }
