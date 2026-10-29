@@ -24,7 +24,12 @@
 *::before,
 *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   background: var(--black);
@@ -35,6 +40,9 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+
+/* Stops the page behind the mobile menu from scrolling while it is open */
+body.menu-open { overflow: hidden; }
 
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
@@ -83,6 +91,7 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 
 .header.scrolled {
   background: rgba(0, 0, 0, 0.88);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   padding: 0.9rem 5%;
   border-bottom-color: var(--line);
@@ -127,6 +136,7 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   width: 34px; height: 22px;
   position: relative;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .menu-btn span {
@@ -143,6 +153,7 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 /* ---------- Hero ---------- */
 .hero {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -190,8 +201,6 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 }
 
 .btn-solid { background: var(--white); color: var(--black); }
-.btn-solid:hover { background: transparent; color: var(--white); }
-.btn-line:hover { background: var(--white); color: var(--black); }
 
 .scroll-hint {
   position: absolute;
@@ -268,7 +277,6 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   border-top: 1px solid var(--line);
   transition: padding-left 0.5s var(--ease);
 }
-.project:hover { padding-left: 1rem; }
 
 .num {
   font-family: var(--font-head);
@@ -298,7 +306,6 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   border-bottom: 1px solid var(--white);
   transition: opacity 0.3s;
 }
-.link:hover { opacity: 0.6; }
 
 /* A link with no URL yet looks inactive until you fill it in */
 .link.pending,
@@ -324,8 +331,6 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 }
 .skill h4 { font-size: 1.4rem; margin-bottom: 0.7rem; }
 .skill p { font-size: 1.02rem; line-height: 1.6; color: var(--grey-4); transition: color 0.4s; }
-.skill:hover { background: var(--white); color: var(--black); }
-.skill:hover p { color: #333; }
 
 .attributes {
   display: flex; flex-wrap: wrap; gap: 0.8rem;
@@ -357,13 +362,14 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 
 .mail {
   display: inline-block;
+  max-width: 100%;
   font-family: var(--font-head);
   font-size: clamp(1.4rem, 4vw, 2.8rem);
   padding-bottom: 6px;
   border-bottom: 1px solid var(--white);
+  overflow-wrap: anywhere;
   transition: opacity 0.3s;
 }
-.mail:hover { opacity: 0.6; }
 
 .contact-links {
   display: flex; justify-content: center; gap: 2.6rem;
@@ -376,7 +382,6 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   color: var(--grey-4);
   transition: color 0.3s;
 }
-.contact-links a:hover { color: var(--white); }
 
 /* ---------- Footer ---------- */
 .footer {
@@ -386,7 +391,20 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   font-size: 0.9rem;
   color: var(--grey-3);
 }
-.footer a:hover { color: var(--white); }
+
+/* ---------- Hover effects (mouse devices only, so phones never get "stuck" hovers) ---------- */
+@media (hover: hover) {
+  .btn-solid:hover { background: transparent; color: var(--white); }
+  .btn-line:hover { background: var(--white); color: var(--black); }
+  .project:hover { padding-left: 1rem; }
+  .link:hover { opacity: 0.6; }
+  .link.pending:hover { opacity: 0.35; }
+  .skill:hover { background: var(--white); color: var(--black); }
+  .skill:hover p { color: #333; }
+  .mail:hover { opacity: 0.6; }
+  .contact-links a:hover { color: var(--white); }
+  .footer a:hover { color: var(--white); }
+}
 
 /* ---------- Reveal animation ---------- */
 .reveal {
@@ -401,7 +419,7 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   .reveal { opacity: 1; transform: none; transition: none; }
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Tablet ---------- */
 @media (max-width: 960px) {
   .grid-2 { grid-template-columns: 1fr; gap: 1.6rem; }
   .grid-2 h2 { margin-bottom: 0; max-width: 20ch; }
@@ -409,18 +427,23 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
   .job, .edu { grid-template-columns: 1fr; gap: 1rem; }
 }
 
+/* ---------- Phone ---------- */
 @media (max-width: 760px) {
-  body { font-size: 1.08rem; }
-  .menu-btn { display: block; z-index: 60; }
+  body { font-size: 1.05rem; }
 
-  /* backdrop-filter on the header traps fixed children inside it, which broke the
-     full-screen menu on phones, so use a plain solid background here instead */
+  /* Header */
+  .header { padding: 1.1rem 6%; }
   .header.scrolled {
+    /* a blur on the header would trap the full-screen menu inside it, so use solid black */
     background: var(--black);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    padding: 0.8rem 6%;
   }
+  .logo { position: relative; z-index: 60; font-size: 1.35rem; }
+  .menu-btn { display: block; z-index: 60; }
 
+  /* Full-screen menu */
   .nav {
     position: fixed;
     top: 0; left: 0;
@@ -429,8 +452,9 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
     height: 100dvh;
     background: var(--black);
     flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6rem;
     transform: translateY(-100%);
     visibility: hidden;
     transition: transform 0.6s var(--ease), visibility 0s linear 0.6s;
@@ -441,32 +465,45 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
     visibility: visible;
     transition: transform 0.6s var(--ease), visibility 0s;
   }
-  .logo { position: relative; z-index: 60; }
-  .nav a { font-family: var(--font-head); font-size: 2rem; letter-spacing: 0.05em; text-transform: none; color: var(--white); }
+  .nav a {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    text-transform: none;
+    color: var(--white);
+  }
+  .nav a::after { display: none; }
+
+  /* Layout and spacing */
   .container { width: 88%; }
   .section { padding: 4.2rem 0; }
   h2 { font-size: 2rem; line-height: 1.15; margin-bottom: 1.8rem; }
   h3 { font-size: 1.45rem; }
   .eyebrow { font-size: 0.72rem; letter-spacing: 0.26em; margin-bottom: 1rem; }
-  .hero { padding: 6.5rem 6% 4rem; min-height: 92vh; }
-  .hero h1 { font-size: clamp(3rem, 15vw, 4.4rem); }
+
+  .hero { padding: 6.5rem 6% 4rem; min-height: 92vh; min-height: 92svh; }
+  .hero h1 { font-size: clamp(2.4rem, 12vw, 3.4rem); }
   .rule { margin: 1.6rem 0 1.2rem; }
   .hero-sub { margin-bottom: 2rem; }
   .btn { padding: 0.85rem 1.6rem; font-size: 0.78rem; }
+  .scroll-hint { display: none; }
+
   .grid-2 p { margin-bottom: 1rem; }
   .facts { margin-top: 1.6rem; }
   .facts li { gap: 1rem; padding: 0.7rem 0; }
   .facts span { min-width: 90px; }
+
   .job, .edu { padding: 1.8rem 0; }
   .job-body ul li { margin-bottom: 0.55rem; }
+
+  .project { grid-template-columns: 1fr; gap: 0.6rem; padding: 2.2rem 0; }
+  .num { font-size: 2.4rem; }
+  .links { gap: 1.4rem; margin-top: 1.3rem; }
+
+  .skills { grid-template-columns: 1fr; }
   .skill { padding: 1.4rem 1.2rem; }
   .attributes { margin-top: 2rem; }
-  .project { padding: 2.2rem 0; }
-  .links { gap: 1.4rem; margin-top: 1.3rem; }
+
   .contact-links { gap: 1.4rem; margin-top: 2rem; }
-  .project { grid-template-columns: 1fr; gap: 0.6rem; }
-  .project:hover { padding-left: 0; }
-  .num { font-size: 2.4rem; }
-  .skills { grid-template-columns: 1fr; }
-  .scroll-hint { display: none; }
+  .footer { padding: 1.6rem 6%; }
 }
