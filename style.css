@@ -403,7 +403,8 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
-  .grid-2 { grid-template-columns: 1fr; gap: 2rem; }
+  .grid-2 { grid-template-columns: 1fr; gap: 1.6rem; }
+  .grid-2 h2 { margin-bottom: 0; max-width: 20ch; }
   .skills { grid-template-columns: repeat(2, 1fr); }
   .job, .edu { grid-template-columns: 1fr; gap: 1rem; }
 }
@@ -411,19 +412,58 @@ h3 { font-size: 1.7rem; margin-bottom: 0.6rem; }
 @media (max-width: 760px) {
   body { font-size: 1.08rem; }
   .menu-btn { display: block; z-index: 60; }
+
+  /* backdrop-filter on the header traps fixed children inside it, which broke the
+     full-screen menu on phones, so use a plain solid background here instead */
+  .header.scrolled {
+    background: var(--black);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   .nav {
     position: fixed;
-    inset: 0;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
     background: var(--black);
     flex-direction: column;
     align-items: center; justify-content: center;
     gap: 2rem;
     transform: translateY(-100%);
-    transition: transform 0.6s var(--ease);
+    visibility: hidden;
+    transition: transform 0.6s var(--ease), visibility 0s linear 0.6s;
+    z-index: 55;
   }
-  .nav.open { transform: none; }
+  .nav.open {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.6s var(--ease), visibility 0s;
+  }
+  .logo { position: relative; z-index: 60; }
   .nav a { font-family: var(--font-head); font-size: 2rem; letter-spacing: 0.05em; text-transform: none; color: var(--white); }
-  .section { padding: 5.5rem 0; }
+  .container { width: 88%; }
+  .section { padding: 4.2rem 0; }
+  h2 { font-size: 2rem; line-height: 1.15; margin-bottom: 1.8rem; }
+  h3 { font-size: 1.45rem; }
+  .eyebrow { font-size: 0.72rem; letter-spacing: 0.26em; margin-bottom: 1rem; }
+  .hero { padding: 6.5rem 6% 4rem; min-height: 92vh; }
+  .hero h1 { font-size: clamp(3rem, 15vw, 4.4rem); }
+  .rule { margin: 1.6rem 0 1.2rem; }
+  .hero-sub { margin-bottom: 2rem; }
+  .btn { padding: 0.85rem 1.6rem; font-size: 0.78rem; }
+  .grid-2 p { margin-bottom: 1rem; }
+  .facts { margin-top: 1.6rem; }
+  .facts li { gap: 1rem; padding: 0.7rem 0; }
+  .facts span { min-width: 90px; }
+  .job, .edu { padding: 1.8rem 0; }
+  .job-body ul li { margin-bottom: 0.55rem; }
+  .skill { padding: 1.4rem 1.2rem; }
+  .attributes { margin-top: 2rem; }
+  .project { padding: 2.2rem 0; }
+  .links { gap: 1.4rem; margin-top: 1.3rem; }
+  .contact-links { gap: 1.4rem; margin-top: 2rem; }
   .project { grid-template-columns: 1fr; gap: 0.6rem; }
   .project:hover { padding-left: 0; }
   .num { font-size: 2.4rem; }
